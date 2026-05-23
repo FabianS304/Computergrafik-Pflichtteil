@@ -72,6 +72,71 @@ function getPlane(width = 256, height = 128, gl) {
     return plane;
 }
 
+function getTeapot() {
+    var teapot = new THREE.Group();
+    var textureLoader = new THREE.TextureLoader();
+    var texture = textureLoader.load('../assets/textures/stone.jpg');
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+
+    var loader = new THREE.OBJLoader();
+
+    loader.load('../assets/3D-objects/teapot.obj',
+        function (mesh) {
+            var material = new THREE.MeshPhongMaterial({ map: texture });
+
+            mesh.children.forEach(function (child) {
+                child.material = material;
+                child.castShadow = true;
+            });
+
+            mesh.position.set(-15, 2, 0);
+            mesh.rotation.set(-Math.PI / 2, 0, 0);
+            mesh.scale.set(0.005, 0.005, 0.005);
+
+            teapot.add(mesh);
+        },
+        function (xhr) {
+            console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+        },
+        function (error) {
+            console.log(error);
+            console.log('An error happened');
+        }
+    );
+
+    return teapot;
+}
+
+
+function addSeg(parent, height, posY) {
+    var axisSphere = new THREE.Group();
+    axisSphere.position.y = 3
+    parent.add(axisSphere);
+
+    var sphereGeometry = new THREE.SphereGeometry(1, 20, 20); // radius 1 -> diameter 2
+    var sphereMaterial = new THREE.MeshLambertMaterial({ color: 0x7777ff });
+    var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+
+    // position the sphere
+    sphere.scale.x = 3;
+    sphere.scale.y = 3;
+    sphere.scale.z = 3;
+    sphere.position.x = 0;
+    sphere.position.y = 0;
+    sphere.position.z = 0;
+    sphere.castShadow = true;
+
+    sphere.receiveShadow = true;
+
+    axisSphere.add(sphere);
+
+    const tripod = new THREE.AxesHelper(5);
+    axisSphere.add(tripod);
+
+    return axisSphere;
+}
+
 // reusable MaterialLoader
 function getMaterial(path) {
 

@@ -25,6 +25,21 @@ function main() {
 
     const plane = getPlane(256, 128, renderer);
     plane.rotation.x = Math.PI / 2;
+    scene.add(plane);
+
+    const teapot = getTeapot();
+    scene.add(teapot);
+
+    let h1 = 1;
+    let h2 = 3;
+    let h3 = 5;
+    let seg1, seg2, seg3;
+    seg1 = addSeg(scene, h1, 0);
+    seg2 = addSeg(seg1, h2, h1);
+    seg3 = addSeg(seg2, h3, h2);
+
+
+    scene.add(seg1, seg2, seg3);
 
 
     //LIGHTS
