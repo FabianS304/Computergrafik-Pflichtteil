@@ -1,6 +1,5 @@
-import * as THREE from '../modules/three.module.js';
 
-export function getCube(cubeSize = 4, color = 'pink') {
+function getCube(cubeSize = 4, color = 'pink') {
 
     //Define Dimensions
     const GEOMETRY = new THREE.BoxGeometry(
@@ -22,7 +21,7 @@ export function getCube(cubeSize = 4, color = 'pink') {
     return cube;
 }
 
-export function getSphere(radius = 3, widthSegments = 32, heightSegments = 16, color = 'tan') {
+function getSphere(radius = 3, widthSegments = 32, heightSegments = 16, color = 'tan') {
 
     const GEOMETRY = new THREE.SphereGeometry(
         radius,
@@ -45,7 +44,7 @@ export function getSphere(radius = 3, widthSegments = 32, heightSegments = 16, c
     return sphere;
 }
 
-export function getPlane(width = 256, height = 128, gl) {
+function getPlane(width = 256, height = 128, gl) {
 
     const GEOMETRY = new THREE.PlaneGeometry(
         width, height
