@@ -90,9 +90,9 @@ function getTeapot() {
                 child.castShadow = true;
             });
 
-            mesh.position.set(-15, 2, 0);
+            mesh.position.set(55, 20, 0);
             mesh.rotation.set(-Math.PI / 2, 0, 0);
-            mesh.scale.set(0.005, 0.005, 0.005);
+            mesh.scale.set(0.035, 0.035, 0.035);
 
             teapot.add(mesh);
         },
@@ -109,30 +109,34 @@ function getTeapot() {
 }
 
 
-function addSeg(parent, height, posY) {
+function addSeg(height) {
+    // Create a group whose origin is at the *base* of the segment.
+    // This way the group's position represents the contact point to the parent,
+    // and child segments can be positioned at the parent's top by setting
+    // child.position.y = parentHeightWorld.
     var axisSphere = new THREE.Group();
-    axisSphere.position.y = 3
-    parent.add(axisSphere);
 
     var sphereGeometry = new THREE.SphereGeometry(1, 20, 20); // radius 1 -> diameter 2
     var sphereMaterial = new THREE.MeshLambertMaterial({ color: 0x7777ff });
     var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
 
-    // position the sphere
+    // scale the sphere to represent a tall segment. Original sphere height = 2.
+    // After scaling by `height`, actual segment height = 2 * height.
     sphere.scale.x = 3;
-    sphere.scale.y = 3;
+    sphere.scale.y = height;
     sphere.scale.z = 3;
-    sphere.position.x = 0;
-    sphere.position.y = 0;
-    sphere.position.z = 0;
-    sphere.castShadow = true;
 
+    // Place the sphere so its bottom sits at the group's origin (y=0).
+    // Center of the sphere should be at half of the actual height: (2*height)/2 = height.
+    sphere.position.set(0, height, 0);
+    sphere.castShadow = true;
     sphere.receiveShadow = true;
 
     axisSphere.add(sphere);
 
     const tripod = new THREE.AxesHelper(5);
     axisSphere.add(tripod);
+
 
     return axisSphere;
 }

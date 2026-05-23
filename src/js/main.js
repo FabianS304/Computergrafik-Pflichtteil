@@ -13,34 +13,36 @@ function main() {
     // create the scene
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0.3, 0.5, 0.8);
-    const fog = new THREE.Fog("grey", 1, 90);
+    //changed Fog-Density to account for the upscaled Teapod and robot arm
+    const fog = new THREE.Fog("grey", 1, 300);
     scene.fog = fog;
 
     // SetUp the Meshes
-    const cube = getCube(4, 'teal');
-    scene.add(cube);
 
-    const sphere = getSphere(3, 45, 20, 'red');
-    scene.add(sphere);
-
-    const plane = getPlane(256, 128, renderer);
+    const plane = getPlane(500, 500, renderer);
     plane.rotation.x = Math.PI / 2;
     scene.add(plane);
 
     const teapot = getTeapot();
     scene.add(teapot);
 
-    let h1 = 1;
-    let h2 = 3;
-    let h3 = 5;
-    let seg1, seg2, seg3;
-    seg1 = addSeg(scene, h1, 0);
-    seg2 = addSeg(seg1, h2, h1);
-    seg3 = addSeg(seg2, h3, h2);
+    let h1 = 8;
+    let h2 = 6;
+    let h3 = 6;
+    var seg1 = addSeg(h1);
+    var seg2 = addSeg(h2);
+    var seg3 = addSeg(h3);
 
-
-    scene.add(seg1, seg2, seg3);
-
+    // Attach seg1 to the scene (so it stands upright independent of the plane's rotation)
+    // and position it slightly above the plane surface.
+    scene.add(seg1);
+    seg1.position.set(0, 1, 0);
+    // Attach seg2 to seg1 at seg1's top. Actual segment height = 2 * h1
+    seg1.add(seg2);
+    seg2.position.set(0, 2 * h1, 0);
+    // Attach seg3 to seg2 at seg2's top.
+    seg2.add(seg3);
+    seg3.position.set(0, 2 * h2, 0);
 
     //LIGHTS
     const color = 0xffffff;
@@ -51,17 +53,23 @@ function main() {
     scene.add(light);
     scene.add(light.target);
 
-    const ambientColor = 0xffffff;
-    const ambientIntensity = 0.2;
-    const ambientLight = new THREE.AmbientLight(ambientColor, ambientIntensity);
-    scene.add(ambientLight);
+
+
 
     //SetUp the Controls and the coresponding GUI
     var controls = new function () {
-        this.rotationSpeed = getRotationSpeed();
-    }
+        this.rotY1 = 0;
+        this.rotZ1 = 0;
+        this.rotZ2 = 0;
+        this.rotZ3 = 0;
+    };
+
     var gui = new dat.GUI();
-    gui.add(controls, 'rotationSpeed', 0, 0.5)
+    gui.add(controls, 'rotY1', 0, 2 * Math.PI);
+    gui.add(controls, 'rotZ1', - Math.PI, Math.PI);
+    gui.add(controls, 'rotZ2', - Math.PI, Math.PI);
+    gui.add(controls, 'rotZ3', - Math.PI, Math.PI);
+
 
     //setUp the trackball-Camera-Control
     var trackballControls = initTrackballControls(camera, renderer);
@@ -74,13 +82,12 @@ function main() {
         trackballControls.update(clock.getDelta());
         stats.update();
 
-        cube.rotation.x += controls.rotationSpeed;
-        cube.rotation.y += controls.rotationSpeed;
-        cube.rotation.z += controls.rotationSpeed;
 
-        sphere.rotation.x += controls.rotationSpeed;
-        sphere.rotation.y += controls.rotationSpeed;
-        sphere.rotation.y += controls.rotationSpeed;
+        // apply GUI controls to the corresponding segment groups
+        seg1.rotation.y = controls.rotY1;
+        seg1.rotation.z = controls.rotZ1;
+        seg2.rotation.z = controls.rotZ2;
+        seg3.rotation.z = controls.rotZ3;
 
         requestAnimationFrame(render);
         renderer.render(scene, camera);
