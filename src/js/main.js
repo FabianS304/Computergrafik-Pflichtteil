@@ -33,6 +33,8 @@ function main() {
     var seg2 = addSeg(h2);
     var seg3 = addSeg(h3);
 
+
+
     // Attach seg1 to the scene (so it stands upright independent of the plane's rotation)
     // and position it slightly above the plane surface.
     scene.add(seg1);
@@ -46,12 +48,17 @@ function main() {
 
     //LIGHTS
     const color = 0xffffff;
-    const intensity = .7;
+    const intensity = .1;
     const light = new THREE.DirectionalLight(color, intensity);
     light.target = plane;
     light.position.set(0, 30, 30);
     scene.add(light);
     scene.add(light.target);
+
+    //Punktlichtquelle am Ende des seg3
+    const pointLight = new THREE.PointLight(0xffffaa, .8);
+    seg3.add(pointLight);
+    pointLight.position.set(0, 2 * h3, 0)
 
 
 
