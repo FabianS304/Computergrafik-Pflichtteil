@@ -64,11 +64,12 @@ function getPlane(width = 256, height = 128, gl) {
     planeNorm.repeat.set(16, 16);
 
     const MATERIAL = new THREE.MeshStandardMaterial({
-        map: map, side: THREE.DoubleSide, normalMap: planeNorm
+        map: map, side: THREE.DoubleSide, normalMap: planeNorm, roughness: 1.0, metalness: 0.1
     });
 
 
     const plane = new THREE.Mesh(GEOMETRY, MATERIAL);
+    plane.receiveShadow = true;
     return plane;
 }
 
@@ -88,11 +89,14 @@ function getTeapot() {
             mesh.children.forEach(function (child) {
                 child.material = material;
                 child.castShadow = true;
+                child.receiveShadow = true;
             });
 
             mesh.position.set(55, 20, 0);
             mesh.rotation.set(-Math.PI / 2, 0, 0);
             mesh.scale.set(0.035, 0.035, 0.035);
+            mesh.castShadow = true;
+            mesh.receiveShadow = true;
 
             teapot.add(mesh);
         },
