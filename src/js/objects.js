@@ -74,8 +74,8 @@ function getPlane(width = 256, height = 128, gl) {
 
 function getTeapot() {
     var teapot = new THREE.Group();
-    var textureLoader = new THREE.TextureLoader();
-    var texture = textureLoader.load('../assets/textures/stone.jpg');
+
+    var texture = getMaterial('../assets/textures/stone.jpg');
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
 
